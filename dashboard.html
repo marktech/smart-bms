@@ -71,7 +71,7 @@
 								temporaryDat /=2.0;
 							}
 							var nsoh = temporaryDat.toFixed(2);
-							$("#dataTables-example tbody").append("<tr onclick="+"get_tr_no(this)"+"><td>" + sensorLoc[x] + "</td><td id="+"ups_temperature"+x+">" + ntemp + "</td><td  id="+"ups_voltage"+x+">" + nvolt +  "</td><td  id="+"ups_iresistance"+x+">" + nir + "</td><td  id="+"ups_soh"+x+">" + nsoh + "</td><td id="+"ups_updated"+x+">" + new Date(entryArray[x]).toLocaleString().replace(/T/,' ').replace(/\..+/,'') + "</td><td id="+"ups_status"+x+">Online</td><td style="+"text-align:right"+"><a class="+"btn" +" href="+"sensordetailedgraph.html"+">View</a></td></tr>");
+							$("#dataTables-example tbody").append("<tr onclick="+"get_tr_no(this)"+"><td>" + sensorLoc[x] + "</td><td id="+"ups_temperature"+x+">" + ntemp + "</td><td  id="+"ups_voltage"+x+">" + nvolt +  "</td><td  id="+"ups_iresistance"+x+">" + nir + "</td><td  id="+"ups_soh"+x+">" + nsoh + "</td><td id="+"ups_updated"+x+">" + new Date(entryArray[x]).toLocaleString().replace(/T/,' ').replace(/\..+/,'') + "</td><td id="+"ups_status"+x+">Online</td><td style="+"text-align:right"+"><a class="+"btn" +" href="+"dashboard-graph.html"+">View</a></td></tr>");
 							document.getElementById("ups_temperature"+x).style.textAlign = "center"
 							document.getElementById("ups_voltage"+x).style.textAlign = "center"
 							document.getElementById("ups_iresistance"+x).style.textAlign = "center"
