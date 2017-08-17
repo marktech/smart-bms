@@ -207,7 +207,7 @@ $(document).ready(function()
 				text: 'All'  
 			}],  
 			inputEnabled: true,  
-			selected: 0  
+			selected: 6  
 		},  
     title: {  
 			text: ''  
