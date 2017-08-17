@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>UPS Battery Smart Monitoring System</title>
+
+	<script type="text/javascript" src="js\jquery.min.js"></script> 
+	
+	<script>
+		var api_key=[];
+		var dev_address=[];
+		var t_temp = 0.0;
+		var t_volt = 0.0;
+		var t_ir = 0.0;
+		var t_soh = 0.0;
+		var average_temperature = 25.0;
+		var average_voltage = 12.0;
+		var average_iresistance = 0.003;
+		var average_soh = 100.0;
+		
+		$(document).ready(function() {
+			$("#test_div_click").on("click", function(){
+				get_device();
+			});
+		});
+		
+		function get_device(){
+				console.log("Get Devices");
+				$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=5000',function(data){
+					console.log("Get Module");
+					console.log(data.feeds);
+					console.log(data.feeds[0].field3);
+					select = document.getElementById('select_sensor'),length = select.options.length;
+					while(length--){
+						select.remove(length);
+					}
+					for (var i = 0; i<data.feeds.length; i++){
+					    if(data.feeds[i].field3 =="UPS") {
+						var opt = document.createElement('option');
+						opt.value = (data.feeds[i].field4);
+						opt.innerHTML = (data.feeds[i].field4);
+						select.appendChild(opt);
+						dev_address[i]=(data.feeds[i].field5);
+						api_key[i]=(data.feeds[i].field2);
+					    }
+					}
+					if (localStorage.getItem("sIndex")== (-1))
+					{
+						localStorage.setItem("sIndex",0);
+					}
+					document.getElementById('select_sensor').selectedIndex = localStorage.getItem("sIndex");
+					localStorage.removeItem("channel");
+					localStorage.removeItem("apikey");
+					localStorage.setItem("channel", dev_address[localStorage.getItem("sIndex")]);
+					localStorage.setItem("apikey", api_key[localStorage.getItem("sIndex")]);
+
+					load_regraph();
+				});
+		}
+		
+		function load_regraph(){
+			localStorage.removeItem("channel");
+			localStorage.removeItem("apikey");
+			localStorage.removeItem("sIndex");
+			localStorage.setItem("channel", dev_address[document.getElementById('select_sensor').selectedIndex]);
+			localStorage.setItem("apikey", api_key[document.getElementById('select_sensor').selectedIndex]);
+			if(localStorage.getItem("sIndex")!=document.getElementById('select_sensor').selectedIndex)
+			{
+				localStorage.setItem("sIndex", document.getElementById('select_sensor').selectedIndex);
+			}
+			else
+				document.getElementById('select_sensor').selectedIndex = localStorage.getItem("sIndex");
+
+				
+			document.getElementById("t_graph").src = 'ups_bat_temp.html';
+			document.getElementById("v_graph").src = 'ups_bat_volt.html';
+			document.getElementById("i_graph").src = 'ups_bat_iresistance.html';
+			document.getElementById("s_graph").src = 'ups_bat_soh.html';
+		}
+	</script>	
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/smartups/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/smartups/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/smartups/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/smartups/vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/smartups/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body onload="get_device()">
+    <div id="wrapper">
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"> <img src="images/logo.png" hspace="20" style="width:100px;"> Smart UPS Battery Monitoring System (Beta)</h1><a class="btn" href="">Login</a>
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+ 								<form>
+								Select Module:
+								<select  id="select_sensor" style="width:200px" onchange="load_regraph()">
+								</select>
+								</form>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+			</div>
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Temperature
+					</div>
+					<!-- /.panel-heading -->
+					<div class="panel-body">
+						<div class="flot-chart"><div class="flot-chart-content" id=""><iframe  id="t_graph" src="" width="100%" height="350" frameborder="0" scrolling="no" onLoad=""></iframe></div></div>
+						<a class="btn" href="ups_bat_temp.html">View</a>
+					</div>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			</div>
+			<!-- /.col-lg-12 -->
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Voltage Level
+					</div>
+					<!-- /.panel-heading -->
+					<div class="panel-body">
+						<div class="flot-chart">
+							<div class="flot-chart-content"><iframe  id="v_graph" src="" width="100%" height="350" frameborder="0" scrolling="no" onLoad=""></iframe></div>
+						</div>
+						<a class="btn" href="ups_bat_volt.html">View</a>
+					</div>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			</div>
+			<!-- /.col-lg-12 -->
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Internal Resistance
+					</div>
+					<!-- /.panel-heading -->
+					<div class="panel-body">
+						<div class="flot-chart">
+							<div class="flot-chart-content"><iframe  id="i_graph" src="" width="100%" height="350" frameborder="0" scrolling="no" onLoad=""></iframe></div>
+						</div>
+						<a class="btn" href="ups_bat_iresistance.html">View</a>
+					</div>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			</div>
+			<!-- /.col-lg-12 -->
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						SOH
+					</div>
+					<!-- /.panel-heading -->
+					<div class="panel-body">
+						<div class="flot-chart">
+							<div class="flot-chart-content"><iframe  id="s_graph" src="" width="100%" height="350" frameborder="0" scrolling="no" onLoad=""></iframe></div>
+						</div>
+						<a class="btn" href="ups_bat_soh.html">View</a>
+					</div>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
+			</div>
+                <!-- /.col-lg-12 -->
+        </div>
+            <!-- /.row -->
+    </div>
+    <!-- /#wrapper -->
+	
+    <!-- jQuery -->
+    <script src="/smartups/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/smartups/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/smartups/vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Flot Charts JavaScript -->
+    <script src="/smartups/vendor/flot/excanvas.min.js"></script>
+    <script src="/smartups/vendor/flot/jquery.flot.js"></script>
+    <script src="/smartups/vendor/flot/jquery.flot.pie.js"></script>
+    <script src="/smartups/vendor/flot/jquery.flot.resize.js"></script>
+    <script src="/smartups/vendor/flot/jquery.flot.time.js"></script>
+    <script src="/smartups/vendor/flot-tooltip/jquery.flot.tooltip.min.js"></script>
+    <!--<script src="../data/flot-data.js"></script> -->
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/smartups/dist/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Smart UPS Battery Monitoring System </title>
+
+	<script type="text/javascript" src="js\jquery.min.js"></script> 
+	<style>
+
+	</style>
+	<script>
+		var sensorKey=[];
+		var sensorCh=[];
+		var sensorAdd=[];
+		var sensorLoc=[];
+		var entryArray=[];
+		var axn = 0;
+		var filNo = 0;
+		var sensorDat = [];
+		var temporaryDat = [];
+		
+		$(document).ready(function() {
+			setInterval(function() { 
+				get_data();
+			},5000);
+		});
+
+		// converts date format from JSON  
+		function getDate(d) {  
+		    // get the data using javascript's date object (year, month, day, hour, minute, second)  
+		    // months in javascript start at 0, so remember to subtract 1 when specifying the month  
+		    // offset in minutes is converted to milliseconds and subtracted so that chart's x-axis is correct  
+		    return Date.UTC(d.substring(0,4), d.substring(5,7)-1, d.substring(8,10), d.substring(11,13), d.substring(14,16), d.substring(17,19));// - (myOffset * 60000);  
+		}  		
+		function get_tr_no(x){
+			console.log("Row index is: " + x.rowIndex);
+					localStorage.setItem("sIndex", x.rowIndex-1);
+					localStorage.setItem("channel", sensorCh[x.rowIndex-1]);
+					localStorage.setItem("apikey", sensorKey[x.rowIndex-1]);
+		}
+		function get_device(){
+			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=5000',function(data){
+				//console.log(data);
+				var x=0;
+				for (var i = 0; i<=data.feeds.length-1; i++){
+					if(data.feeds[i].field3 =="UPS") {
+						sensorKey[i] = (data.feeds[i].field2);
+						sensorLoc[i] = (data.feeds[i].field4);
+						sensorAdd[i] = (data.feeds[i].field1);
+						sensorCh[i] = (data.feeds[i].field5);
+						entryArray[i] = (data.feeds[i].created_at);
+						$.get('https://api.thingspeak.com/channels/'+sensorCh[i]+'/feeds.json?api_key='+sensorKey[i]+'&results=1',function(sensordata){
+							console.log(sensordata);
+							var ntemp = parseFloat(sensordata.feeds[0].field1).toFixed(2);
+							var nvolt = parseFloat(sensordata.feeds[0].field2).toFixed(2);
+							temporaryDat = eval(sensordata.feeds[0].field3);
+							temporaryDat = parseFloat(temporaryDat);
+							temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
+							var nir = temporaryDat.toFixed(2);
+							temporaryDat = eval(sensordata.feeds[0].field4);
+							temporaryDat = parseFloat(temporaryDat);
+							for(filNo=0;filNo<3;filNo++){
+								temporaryDat +=100.0;
+								temporaryDat /=2.0;
+							}
+							var nsoh = temporaryDat.toFixed(2);
+							$("#dataTables-example tbody").append("<tr onclick="+"get_tr_no(this)"+"><td>" + sensorLoc[x] + "</td><td id="+"ups_temperature"+x+">" + ntemp + "</td><td  id="+"ups_voltage"+x+">" + nvolt +  "</td><td  id="+"ups_iresistance"+x+">" + nir + "</td><td  id="+"ups_soh"+x+">" + nsoh + "</td><td id="+"ups_updated"+x+">" + new Date(entryArray[x]).toLocaleString().replace(/T/,' ').replace(/\..+/,'') + "</td><td id="+"ups_status"+x+">Online</td><td style="+"text-align:right"+"><a class="+"btn" +" href="+"sensordetailedgraph.html"+">View</a></td></tr>");
+							document.getElementById("ups_temperature"+x).style.textAlign = "center"
+							document.getElementById("ups_voltage"+x).style.textAlign = "center"
+							document.getElementById("ups_iresistance"+x).style.textAlign = "center"
+							document.getElementById("ups_soh"+x).style.textAlign = "center"
+							document.getElementById("ups_temperature"+x).style.vAlign = "center"
+							document.getElementById("ups_voltage"+x).style.vAlign = "center"
+							document.getElementById("ups_iresistance"+x).style.vAlign = "center"
+							document.getElementById("ups_soh"+x).style.vAlign = "center"
+							document.getElementById("ups_updated"+x).style.textAlign = "center"
+							document.getElementById("ups_updated"+x).style.vAlign = "center"
+							document.getElementById("ups_status"+x).style.textAlign = "center"
+
+							x++;
+						});
+					}
+					
+				}
+			});
+
+			get_data();
+		}
+		
+		function get_data(){
+			var x = 0; 
+			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=5000',function(moddata){
+				axn=moddata.feeds.length;
+			});
+			for(h=0; h<=(axn-1);h++){					
+				$.getJSON('https://api.thingspeak.com/channels/'+sensorCh[h]+'/feeds.json?api_key='+sensorKey[h]+'&results=1',function(data){
+
+					if(data.feeds.length!=0)
+					{
+						for(x=0;x<axn;x++){
+							if(data.channel.name == sensorAdd[x])
+								break;
+						}
+						console.log(data);
+
+						document.getElementById("ups_updated"+x).innerHTML = new Date(data.feeds[0].created_at).toLocaleString().replace(/T/,' ').replace(/\..+/,'');
+					
+						var current_date = new Date();
+						var rhrs = current_date.getHours();
+						current_date.setHours(rhrs+8);
+						console.log(getDate(current_date.toISOString()));
+						console.log(getDate(data.feeds[0].created_at));
+							
+						if((getDate(current_date.toISOString())-(getDate(data.feeds[0].created_at))) > 33000000)
+						{
+							document.getElementById("ups_status"+x).innerHTML = "Offline"
+							document.getElementById("ups_status"+x).style.backgroundColor = "Red"
+						}
+						else
+						{
+							document.getElementById("ups_status"+x).innerHTML = "Online"
+							document.getElementById("ups_status"+x).style.backgroundColor = "Green"
+						}
+						
+						document.getElementById("ups_temperature"+x).innerHTML = parseFloat(data.feeds[0].field1).toFixed(2);	
+						if((parseFloat(data.feeds[0].field1).toFixed(2) > 40.0)||(parseFloat(data.feeds[0].field1).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field1).toFixed(2) == 0))
+						{
+							document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
+						}
+						else if((parseFloat(data.feeds[0].field1).toFixed(2) < 40.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>30))
+						{
+							document.getElementById("ups_temperature"+x).style.backgroundColor = "Yellow"
+						}
+						else if((parseFloat(data.feeds[0].field1).toFixed(2) < 30.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>18))
+						{
+							document.getElementById("ups_temperature"+x).style.backgroundColor = "Green"
+						}
+						else
+						{
+							document.getElementById("ups_temperature"+x).style.backgroundColor = "Yellow"
+						}
+						
+						document.getElementById("ups_voltage"+x).innerHTML = parseFloat(data.feeds[0].field2).toFixed(2);			
+						if((parseFloat(data.feeds[0].field2).toFixed(2) > 14.0)||(parseFloat(data.feeds[0].field2).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field2).toFixed(2) == 0))
+						{
+							document.getElementById("ups_voltage"+x).style.backgroundColor = "Red"
+						}
+						else if((parseFloat(data.feeds[0].field2).toFixed(2) <14.0)&& (parseFloat(data.feeds[0].field2).toFixed(2)>13.5))
+						{
+							document.getElementById("ups_voltage"+x).style.backgroundColor = "Yellow"
+						}
+						else if((parseFloat(data.feeds[0].field2).toFixed(2) < 13.5)&& (parseFloat(data.feeds[0].field2).toFixed(2)>11.8))
+						{
+							document.getElementById("ups_voltage"+x).style.backgroundColor = "Green"
+						}
+						else
+						{
+							document.getElementById("ups_voltage"+x).style.backgroundColor = "Red"
+						}
+						
+/*Internal resistance - Linear Log Regression Modelling implemented here*/
+						temporaryDat = eval(data.feeds[0].field3);
+						temporaryDat = parseFloat(temporaryDat);
+						temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
+
+						document.getElementById("ups_iresistance"+x).innerHTML = temporaryDat.toFixed(2);			
+						if((temporaryDat.toFixed(2) > 6.0)||(temporaryDat.toFixed(2) == "NaN")||(temporaryDat.toFixed(2) == 0))
+						{
+							document.getElementById("ups_iresistance"+x).style.backgroundColor = "Red"
+						}
+						else if((temporaryDat.toFixed(2) <6.0)&& (temporaryDat.toFixed(2) >4.0))
+						{
+							document.getElementById("ups_iresistance"+x).style.backgroundColor = "Yellow"
+						}
+						else
+						{
+							document.getElementById("ups_iresistance"+x).style.backgroundColor = "Green"
+						}
+/*Internal resistance - ------------------------------------*/
+						
+/*state of Health - moving average implemented here*/
+						temporaryDat = eval(data.feeds[0].field4);
+						temporaryDat = parseFloat(temporaryDat);
+						for(filNo=0;filNo<3;filNo++){
+							temporaryDat +=100.0;
+							temporaryDat /=2.0;
+						}
+						document.getElementById("ups_soh"+x).innerHTML = temporaryDat.toFixed(2);	
+						if((temporaryDat.toFixed(2) < 50.0)||(temporaryDat.toFixed(2) == "NaN")||(temporaryDat.toFixed(2) == 0))
+						{
+							document.getElementById("ups_soh"+x).style.backgroundColor = "Red"
+						}
+						else if((temporaryDat.toFixed(2) >50.0)&& temporaryDat.toFixed(2) < 80)
+						{
+							document.getElementById("ups_soh"+x).style.backgroundColor = "Yellow"
+						}
+						else
+						{
+							document.getElementById("ups_soh"+x).style.backgroundColor = "Green"
+						}
+					}
+				});
+			}
+
+		}
+
+	</script>	
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/smartups/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/smartups/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="/smartups/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="/smartups/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/smartups/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/smartups/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body onload="get_device()">
+
+    <div id="wrapper">
+        <div>
+            <div class="row">
+			
+                <div class="col-lg-12">
+                    <h1 class="page-header"> <img src="images/logo.png" hspace="20" style="width:100px;"> Smart UPS Battery Monitoring System (Beta)</h1><a class="btn" href="">Login</a>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Available Data
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;">Battery ID  </th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">Temperature C <br>(23 - 30) </th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">   Voltage V <br> (11.8 - 13.5) </th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center"> Resistance mOhms <br>(1 - 5.0) </th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">    SOH % <br>(50 - 100)     </th>                                        
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">Last Updated</th>                                        
+										<th style="background-color:black;color:white;border:2;border-color:white;text-align:center">   Status   </th>
+										<th style="background-color:black;color:white;border:2;border-color:white;text-align:right">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/smartups/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/smartups/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/smartups/vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="/smartups/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="/smartups/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="/smartups/vendor/datatables-responsive/dataTables.responsive.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/smartups/dist/js/sb-admin-2.js"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+</body
+
+</html>
