@@ -250,125 +250,43 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-			
             <div class="row">
-				<div class="col-lg-12">
+                <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-							UPS Circuit and Battery Group
-						</div>
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-lg-12">
-									<div class="col-lg-3 col-md-6">
-										<div class="panel panel-primary">
-											<div class="panel-heading">
-												<div class="row">
-													<div class="col-xs-3">
-													</div>
-													<div class="col-xs-9 text-right">
-														<div>B1PH1</div>
-													</div>
-												</div>
-											</div>
-											<a href="dashboard-table.html">
-												<div class="panel-footer">
-													<span class="pull-left">View Available Data</span>
-													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-													<div class="clearfix"></div>
-												</div>
-											</a>
-										</div>
-									</div>
-									<div class="col-lg-3 col-md-6">
-										<div class="panel panel-green">
-											<div class="panel-heading">
-												<div class="row">
-													<div class="col-xs-3">
-													</div>
-													<div class="col-xs-9 text-right">
-														<div>B1PH2</div>
-													</div>
-												</div>
-											</div>
-											<a href="dashboard-table.html">
-												<div class="panel-footer">
-													<span class="pull-left">View Available Data</span>
-													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-													<div class="clearfix"></div>
-												</div>
-											</a>
-										</div>
-									</div>
-									<div class="col-lg-3 col-md-6">
-										<div class="panel panel-green">
-											<div class="panel-heading">
-												<div class="row">
-													<div class="col-xs-3">
-													</div>
-													<div class="col-xs-9 text-right">
-														<div>B2L1</div>
-													</div>
-												</div>
-											</div>
-											<a href="dashboard-table.html">
-												<div class="panel-footer">
-													<span class="pull-left">View Available Data</span>
-													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-													<div class="clearfix"></div>
-												</div>
-											</a>
-										</div>
-									</div>
-									<div class="col-lg-3 col-md-6">
-										<div class="panel panel-yellow">
-											<div class="panel-heading">
-												<div class="row">
-													<div class="col-xs-3">
-													</div>
-													<div class="col-xs-9 text-right">
-														<div>B3L1</div>
-													</div>
-												</div>
-											</div>
-											<a href="dashboard-table.html">
-												<div class="panel-footer">
-													<span class="pull-left">View Available Data</span>
-													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-													<div class="clearfix"></div>
-												</div>
-											</a>
-										</div>
-									</div>
-									<div class="col-lg-3 col-md-6">
-										<div class="panel panel-red">
-											<div class="panel-heading">
-												<div class="row">
-													<div class="col-xs-3">
-													</div>
-													<div class="col-xs-9 text-right">
-														<div>B4L4</div>
-													</div>
-												</div>
-											</div>
-											<a href="dashboard-table.html">
-												<div class="panel-footer">
-													<span class="pull-left">View Available Data</span>
-													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-													<div class="clearfix"></div>
-												</div>
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- /.row -->
-						</div>
-					</div>
-				</div>
-			</div>
+                            Available Data
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="data_for">
+                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;">Battery ID</th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">Temperature C <br>(23.0 - 30.0) </th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">   Voltage V <br> (11.8 - 13.5) </th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center"> Resistance mOhms <br>(1.0 - 5.0) </th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">    SOH % <br>(50.0 - 100.0)     </th>                                        
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">Last Updated</th>                                        
+										<th style="background-color:black;color:white;border:2;border-color:white;text-align:center">   Status   </th>
+										<th style="background-color:black;color:white;border:2;border-color:white;text-align:right">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
         </div>
         <!-- /#page-wrapper -->
+
     </div>
     <!-- /#wrapper -->
 
