@@ -63,7 +63,7 @@
 							temporaryDat = eval(sensordata.feeds[0].field3);
 							temporaryDat = parseFloat(temporaryDat);
 							temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
-							if((temporaryDat == NaN)||(temporaryDat == 2.5))
+							if((temporaryDat == NaN)||(temporaryDat < 2.5))
 								temporaryDat = 2.5;
 							var nir = temporaryDat.toFixed(2);
 							temporaryDat = eval(sensordata.feeds[0].field4);
