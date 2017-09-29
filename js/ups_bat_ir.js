@@ -91,7 +91,9 @@ $(document).ready(function()
          var p = []//new Highcharts.Point();  
          var fieldStr = "data.feeds["+h+"].field"+fieldList[fieldIndex].field;  
 		  	var v = eval(fieldStr);  
- 		  	p[0] = getChartDate(data.feeds[h].created_at);  
+ 		  	p[0] = getChartDate(data.feeds[h].created_at);  							
+			if(v < 2.0)
+				v = 2.9;
 	 	  	p[1] = (0.6*Math.log((parseFloat(v)-1.3)) + 2.8); 
 			//document.getElementById("AD590_B3").innerHTML = parseFloat(p[1]).toFixed(3);
 
