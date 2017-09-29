@@ -62,9 +62,9 @@
 							var nvolt = parseFloat(sensordata.feeds[0].field2).toFixed(2);
 							temporaryDat = eval(sensordata.feeds[0].field3);
 							temporaryDat = parseFloat(temporaryDat);
-							if(temporaryDat < 2.0)
-								temporaryDat = 2.9;
 							temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
+							if((temporaryDat == NaN)||(temporaryDat == 2.5))
+								temporaryDat = 2.5;
 							var nir = temporaryDat.toFixed(2);
 							temporaryDat = eval(sensordata.feeds[0].field4);
 							temporaryDat = parseFloat(temporaryDat);
