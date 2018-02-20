@@ -51,13 +51,13 @@
 				var x=0;
 				for (var i = 0; i<=data.feeds.length-1; i++){
 					if(data.feeds[i].field3 =="UPS") {
-						sensorKey[x] = (data.feeds[i].field2);
-						sensorLoc[x] = (data.feeds[i].field4);
-						sensorAdd[x] = (data.feeds[i].field1);
-						sensorCh[x] = (data.feeds[i].field5);
-						entryArray[x] = (data.feeds[i].created_at);
-						$.get('https://api.thingspeak.com/channels/'+sensorCh[x]+'/feeds.json?api_key='+sensorKey[x]+'&results=1',function(sensordata){
-							console.log('https://api.thingspeak.com/channels/'+sensorCh[x]+'/feeds.json?api_key='+sensorKey[x]+'&results=1');
+						sensorKey[i] = (data.feeds[i].field2);
+						sensorLoc[i] = (data.feeds[i].field4);
+						sensorAdd[i] = (data.feeds[i].field1);
+						sensorCh[i] = (data.feeds[i].field5);
+						entryArray[i] = (data.feeds[i].created_at);
+						$.get('https://api.thingspeak.com/channels/'+sensorCh[i]+'/feeds.json?api_key='+sensorKey[i]+'&results=1',function(sensordata){
+							console.log('https://api.thingspeak.com/channels/'+sensorCh[i]+'/feeds.json?api_key='+sensorKey[i]+'&results=1');
 							console.log(sensordata);
 							var ntemp = parseFloat(sensordata.feeds[0].field1).toFixed(2);
 							var nvolt = parseFloat(sensordata.feeds[0].field2).toFixed(2);
