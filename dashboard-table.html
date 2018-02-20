@@ -57,6 +57,7 @@
 						sensorCh[i] = (data.feeds[i].field5);
 						entryArray[i] = (data.feeds[i].created_at);
 						$.get('https://api.thingspeak.com/channels/'+sensorCh[i]+'/feeds.json?api_key='+sensorKey[i]+'&results=1',function(sensordata){
+							console.log('https://api.thingspeak.com/channels/'+sensorCh[i]+'/feeds.json?api_key='+sensorKey[i]+'&results=1');
 							console.log(sensordata);
 							var ntemp = parseFloat(sensordata.feeds[0].field1).toFixed(2);
 							var nvolt = parseFloat(sensordata.feeds[0].field2).toFixed(2);
