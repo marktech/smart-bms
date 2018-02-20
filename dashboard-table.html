@@ -49,7 +49,7 @@
 			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=5000',function(data){
 				//console.log(data);
 				var x=0;
-				for (var i = 0; i<=data.feeds.length-1; i++){
+				for (var i = 0; i<=data.feeds.length; i++){
 					if(data.feeds[i].field3 =="UPS") {
 						sensorKey[i] = (data.feeds[i].field2);
 						sensorLoc[i] = (data.feeds[i].field4);
@@ -279,7 +279,7 @@
                                     <tr>
                                         <th style="background-color:black;color:white;border:2;border-color:white;">Battery ID</th>
                                         <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">Temperature C <br>(23.0 - 30.0) </th>
-                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">   Voltage V <br> (11.8 - 13.5) </th>
+                                        <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">   Voltage V <br> (13.5 - 16.0) </th>
                                         <th style="background-color:black;color:white;border:2;border-color:white;text-align:center"> Resistance mOhms <br>(2.0 - 5.0) </th>
                                         <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">    SOH % <br>(50.0 - 100.0)     </th>                                        
                                         <th style="background-color:black;color:white;border:2;border-color:white;text-align:center">Last Updated</th>                                        
