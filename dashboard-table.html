@@ -107,8 +107,8 @@
 				axn=moddata.feeds.length;
 			});
 			for(h=0; h<=(axn-1);h++){					
+				console.log('https://api.thingspeak.com/channels/'+sensorCh[h]+'/feeds.json?api_key='+sensorKey[h]+'&results=1');
 				$.getJSON('https://api.thingspeak.com/channels/'+sensorCh[h]+'/feeds.json?api_key='+sensorKey[h]+'&results=1',function(data){
-					console.log('https://api.thingspeak.com/channels/'+sensorCh[h]+'/feeds.json?api_key='+sensorKey[h]+'&results=1');
 
 					if(data.feeds.length!=0)
 					{
@@ -116,6 +116,7 @@
 							if(data.channel.name == sensorAdd[x])
 								break;
 						}
+						
 						console.log(data);
 
 						document.getElementById("ups_updated"+x).innerHTML = new Date(data.feeds[0].created_at).toLocaleString().replace(/T/,' ').replace(/\..+/,'');
