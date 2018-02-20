@@ -114,9 +114,6 @@
 							if(data.channel.name == sensorAdd[x])
 							{
 								console.log('https://api.thingspeak.com/channels/'+sensorCh[x]+'/feeds.json?api_key='+sensorKey[x]+'&results=1');
-								break;
-							}
-						}
 						
 						console.log(data);
 
@@ -224,6 +221,9 @@
 						else
 						{
 							document.getElementById("ups_soh"+x).style.backgroundColor = "Green"
+						}
+								break;
+							}
 						}
 					}
 				});
