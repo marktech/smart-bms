@@ -108,10 +108,10 @@
 								sensorDatIR [x] = parseFloat(data.feeds[0].field3).toFixed(2);			
 								sensorDatSOH [x] = parseFloat(data.feeds[0].field4).toFixed(2);			
 								
-								if(((sensorDatT [x]<25.0)&&(sensorDatT [x]>18.0))&&(IsOffline = 0)){
+								if(((sensorDatT [x]<25.0)&&(sensorDatT [x]>18.0))&&((sensorDatV [x]<16.0)&&(sensorDatV [x]>13.5))&&((sensorDatIR [x]<3.5)&&(sensorDatIR [x]>1.0))&&((sensorDatSOH [x]<100.0)&&(sensorDatSOH [x]>60.0))&&(IsOffline = 0)){
 									document.getElementById(sensorLoc[x]).src = "images/bat_green.png";
 								}
-								else if(((sensorDatT [x]<30.0)&&(sensorDatT [x]>24.99))&&(IsOffline = 0)){
+								else if(((sensorDatT [x]<30)&&(sensorDatT [x]>24.99))&&((sensorDatV [x]<13.51)&&(sensorDatV [x]>13.0))&&((sensorDatIR [x]<6.0)&&(sensorDatIR [x]>3.51))&&((sensorDatSOH [x]<60.1)&&(sensorDatSOH [x]>50.0))&&(IsOffline = 0)){
 									document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
 								}
 								else
