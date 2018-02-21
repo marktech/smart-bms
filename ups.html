@@ -48,11 +48,8 @@
 		    // offset in minutes is converted to milliseconds and subtracted so that chart's x-axis is correct  
 		    return Date.UTC(d.substring(0,4), d.substring(5,7)-1, d.substring(8,10), d.substring(11,13), d.substring(14,16), d.substring(17,19));// - (myOffset * 60000);  
 		}  		
-		function get_tr_no(x){
-			console.log("Row index is: " + x.rowIndex);
-					localStorage.setItem("sIndex", x.rowIndex-1);
-					localStorage.setItem("channel", sensorCh[x.rowIndex-1]);
-					localStorage.setItem("apikey", sensorKey[x.rowIndex-1]);
+		function showinfo(){
+
 		}
 		function get_device(){
 			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=5000',function(data){
@@ -114,9 +111,10 @@
 								else if(((sensorDatT [x]<30)&&(sensorDatT [x]>24.99))&&((sensorDatV [x]<13.51)&&(sensorDatV [x]>13.0))&&((sensorDatIR [x]<6.0)&&(sensorDatIR [x]>3.51))&&((sensorDatSOH [x]<60.1)&&(sensorDatSOH [x]>50.0))&&(IsOffline = 0)){
 									document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
 								}
-								else
+								else{
 									document.getElementById(sensorLoc[x]).src = "images/bat_red.png";
-
+								}
+								
 								break;
 							}
 						}
