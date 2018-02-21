@@ -157,11 +157,12 @@
 								}
 								
 								document.getElementById("ups_voltage"+x).innerHTML = parseFloat(data.feeds[0].field2).toFixed(2);			
-								if((parseFloat(data.feeds[0].field2).toFixed(2) > 16.0)||(parseFloat(data.feeds[0].field2).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field2).toFixed(2) == 0))
-								{
-									document.getElementById("ups_voltage"+x).style.backgroundColor = "Red"
-								}
-								else if((parseFloat(data.feeds[0].field2).toFixed(2) <16.0)&& (parseFloat(data.feeds[0].field2).toFixed(2)>13.5))
+								//if((parseFloat(data.feeds[0].field2).toFixed(2) > 16.0)||(parseFloat(data.feeds[0].field2).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field2).toFixed(2) == 0))
+								//{
+								//	document.getElementById("ups_voltage"+x).style.backgroundColor = "Red"
+								//}
+								//else 
+								if((parseFloat(data.feeds[0].field2).toFixed(2) <16.0)&& (parseFloat(data.feeds[0].field2).toFixed(2)>13.5))
 								{
 									document.getElementById("ups_voltage"+x).style.backgroundColor = "Green"
 								}
