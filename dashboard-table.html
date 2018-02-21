@@ -139,21 +139,22 @@
 								}
 								
 								document.getElementById("ups_temperature"+x).innerHTML = parseFloat(data.feeds[0].field1).toFixed(2);	
-								if((parseFloat(data.feeds[0].field1).toFixed(2) > 40.0)||(parseFloat(data.feeds[0].field1).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field1).toFixed(2) == 0))
-								{
-									document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
-								}
-								else if((parseFloat(data.feeds[0].field1).toFixed(2) < 40.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>30))
+								//if((parseFloat(data.feeds[0].field1).toFixed(2) > 40.0)||(parseFloat(data.feeds[0].field1).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field1).toFixed(2) == 0))
+								//{
+								//	document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
+								//}
+								//else 
+								if((parseFloat(data.feeds[0].field1).toFixed(2) < 40.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>29.99))
 								{
 									document.getElementById("ups_temperature"+x).style.backgroundColor = "Yellow"
 								}
-								else if((parseFloat(data.feeds[0].field1).toFixed(2) < 30.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>18))
+								else if((parseFloat(data.feeds[0].field1).toFixed(2) < 30)&& (parseFloat(data.feeds[0].field1).toFixed(2)>18))
 								{
 									document.getElementById("ups_temperature"+x).style.backgroundColor = "Green"
 								}
 								else
 								{
-									document.getElementById("ups_temperature"+x).style.backgroundColor = "Yellow"
+									document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
 								}
 								
 								document.getElementById("ups_voltage"+x).innerHTML = parseFloat(data.feeds[0].field2).toFixed(2);			
@@ -191,7 +192,7 @@
 								{
 									document.getElementById("ups_iresistance"+x).style.backgroundColor = "Red"
 								}
-								else if((temporaryDat.toFixed(2) <6.0)&& (temporaryDat.toFixed(2) >4.0))
+								else if((temporaryDat.toFixed(2) <6.1)&& (temporaryDat.toFixed(2) >4.0))
 								{
 									document.getElementById("ups_iresistance"+x).style.backgroundColor = "Yellow"
 								}
@@ -213,7 +214,7 @@
 								{
 									document.getElementById("ups_soh"+x).style.backgroundColor = "Red"
 								}
-								else if((temporaryDat.toFixed(2) >50.0)&& temporaryDat.toFixed(2) < 80)
+								else if((temporaryDat.toFixed(2) >50.1)&& temporaryDat.toFixed(2) < 80)
 								{
 									document.getElementById("ups_soh"+x).style.backgroundColor = "Yellow"
 								}
