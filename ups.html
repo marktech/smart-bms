@@ -29,6 +29,10 @@
 		var axn = 0;
 		var filNo = 0;
 		var sensorDat = [];
+		var sensorDatT = [];
+		var sensorDatV = [];
+		var sensorDatIR = [];
+		var sensorDatSOH = [];
 		var temporaryDat = [];
 		
 		$(document).ready(function() {
@@ -84,6 +88,19 @@
 							}
 							var nsoh = temporaryDat.toFixed(2);
 						});
+						sensorDatT [i] = ntemp;
+						sensorDatV [i] = nvolt;
+						sensorDatIR [i] = nir;
+						sensorDatSOH [i] = nsoh;
+						if((sensorDatT [i]<25.0)&&(sensorDatT [i]>18.0)){
+							document.getElementById(sensorLoc[i]).src = "images\bat_green.png";
+						}
+						else if((sensorDatT [i]<30.0)&&(sensorDatT [i]>24.99)){
+							document.getElementById(sensorLoc[i]).src = "images\bat_yellow.png";
+						}
+						else
+							document.getElementById(sensorLoc[i]).src = "images\bat_red.png";
+							
 					}
 					
 				}
@@ -118,7 +135,7 @@
 
 </head>
 
-<body>
+<body onload="get_device()">
     <div id="wrapper">
         <div>
             <div class="row">
