@@ -109,13 +109,13 @@
 								sensorDatSOH [x] = parseFloat(data.feeds[0].field4).toFixed(2);			
 								
 								if(((sensorDatT [x]<25.0)&&(sensorDatT [x]>18.0))&&(IsOffline = 0)){
-									document.getElementById(sensorLoc[x]).src = "images\bat_green.png";
+									document.getElementById(sensorLoc[x]).src = "images/bat_green.png";
 								}
 								else if(((sensorDatT [x]<30.0)&&(sensorDatT [x]>24.99))&&(IsOffline = 0)){
-									document.getElementById(sensorLoc[x]).src = "images\bat_yellow.png";
+									document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
 								}
 								else
-									document.getElementById(sensorLoc[x]).src = "images\bat_red.png";
+									document.getElementById(sensorLoc[x]).src = "images/bat_red.png";
 
 								break;
 							}
