@@ -34,6 +34,7 @@
 		var sensorDatIR = [];
 		var sensorDatSOH = [];
 		var temporaryDat = [];
+		var IsOffline = 0;
 		
 		$(document).ready(function() {
 			setInterval(function() { 
@@ -64,49 +65,68 @@
 						sensorAdd[i] = (data.feeds[i].field1);
 						sensorCh[i] = (data.feeds[i].field5);
 						entryArray[i] = (data.feeds[i].created_at);
-						$.get('https://api.thingspeak.com/channels/'+sensorCh[i]+'/feeds.json?api_key='+sensorKey[i]+'&results=1',function(sensordata){
-							console.log('https://api.thingspeak.com/channels/'+sensorCh[i]+'/feeds.json?api_key='+sensorKey[i]+'&results=1');
-							console.log(sensordata);
-							var ntemp = parseFloat(sensordata.feeds[0].field1).toFixed(2);
-							var nvolt = parseFloat(sensordata.feeds[0].field2).toFixed(2);
-							temporaryDat = eval(sensordata.feeds[0].field3);
-							temporaryDat = parseFloat(temporaryDat);
-							temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
-							if(temporaryDat < 2.5)
-								temporaryDat = 2.85;
-							if((temporaryDat.toFixed(2) == "NaN"))
-							{
-								temporaryDat = 2.85;
-								temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
-							}
-							var nir = temporaryDat.toFixed(2);
-							temporaryDat = eval(sensordata.feeds[0].field4);
-							temporaryDat = parseFloat(temporaryDat);
-							for(filNo=0;filNo<3;filNo++){
-								temporaryDat +=100.0;
-								temporaryDat /=2.0;
-							}
-							var nsoh = temporaryDat.toFixed(2);
-							
-							sensorDatT++ = ntemp;
-							sensorDatV++ = nvolt;
-							sensorDatIR++ = nir;
-							sensorDatSOH++ = nsoh;
-						});
-						if((sensorDatT [i]<25.0)&&(sensorDatT [i]>18.0)){
-							document.getElementById(sensorLoc[i]).src = "images\bat_green.png";
-						}
-						else if((sensorDatT [i]<30.0)&&(sensorDatT [i]>24.99)){
-							document.getElementById(sensorLoc[i]).src = "images\bat_yellow.png";
-						}
-						else
-							document.getElementById(sensorLoc[i]).src = "images\bat_red.png";
-							
 					}
 					
 				}
 			});
 		}
+		
+		function get_data(){
+			var x = 0; 
+			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=5000',function(moddata){
+				axn=moddata.feeds.length;
+			});
+			for(h=0; h<=(axn-1);h++){					
+				$.getJSON('https://api.thingspeak.com/channels/'+sensorCh[h]+'/feeds.json?api_key='+sensorKey[h]+'&results=1',function(data){
+					if(data.feeds.length!=0)
+					{
+						for(x=0;x<(axn-1);x++){
+							if(data.channel.name == sensorAdd[x])
+							{
+								console.log('https://api.thingspeak.com/channels/'+sensorCh[x]+'/feeds.json?api_key='+sensorKey[x]+'&results=1');
+						
+								console.log(data);
+							
+								var current_date = new Date();
+								var rhrs = current_date.getHours();
+								current_date.setHours(rhrs+8);
+								console.log(getDate(current_date.toISOString()));
+								console.log(getDate(data.feeds[0].created_at));
+									
+								if((getDate(current_date.toISOString())-(getDate(data.feeds[0].created_at))) > 1000000000)
+								{
+									IsOffline = 1;
+								}
+								else
+								{
+									IsOffline = 0;
+								}
+								
+								sensorDatT [x] = parseFloat(data.feeds[0].field1).toFixed(2);	
+								sensorDatV [x] = parseFloat(data.feeds[0].field2).toFixed(2);			
+								sensorDatIR [x] = parseFloat(data.feeds[0].field3).toFixed(2);			
+								sensorDatSOH [x] = parseFloat(data.feeds[0].field4).toFixed(2);			
+								
+								if(((sensorDatT [x]<25.0)&&(sensorDatT [x]>18.0))&&(IsOffline = 0)){
+									document.getElementById(sensorLoc[x]).src = "images\bat_green.png";
+								}
+								else if(((sensorDatT [x]<30.0)&&(sensorDatT [x]>24.99))&&(IsOffline = 0)){
+									document.getElementById(sensorLoc[x]).src = "images\bat_yellow.png";
+								}
+								else
+									document.getElementById(sensorLoc[x]).src = "images\bat_red.png";
+
+								break;
+							}
+						}
+						if (x>=(axn-1)){
+							console.log(data.channel.name)
+						}
+					}
+				});
+			}
+		}
+
 	</script>	
 
     <!-- Bootstrap Core CSS -->
@@ -163,19 +183,19 @@
 					<tr>
 						<td>
 						<a href="dashboard-graph.html">
-						<img src="images\bat_green.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						<img id="B1PH2-B3D3-C01" src="images\bat_green.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a href="dashboard-graph.html">
+						<img id="B1PH2-B3D3-C02" src="images\bat_green.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a href="dashboard-graph.html">
 						<img src="images\bat_green.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a href="dashboard-graph.html">
-						<img src="images\bat_green.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						<img id="B1PH2-B3D3-C03" src="images\bat_green.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a href="dashboard-graph.html">
-						<img src="images\bat_green.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
-						</a>
-						<a href="dashboard-graph.html">
-						<img src="images\bat_green.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						<img id="B1PH2-B3D3-C04" src="images\bat_green.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a href="dashboard-graph.html">
 						<img src="images\bat_green.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
