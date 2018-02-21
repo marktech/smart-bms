@@ -87,11 +87,12 @@
 								temporaryDat /=2.0;
 							}
 							var nsoh = temporaryDat.toFixed(2);
+							
+							sensorDatT++ = ntemp;
+							sensorDatV++ = nvolt;
+							sensorDatIR++ = nir;
+							sensorDatSOH++ = nsoh;
 						});
-						sensorDatT [i] = ntemp;
-						sensorDatV [i] = nvolt;
-						sensorDatIR [i] = nir;
-						sensorDatSOH [i] = nsoh;
 						if((sensorDatT [i]<25.0)&&(sensorDatT [i]>18.0)){
 							document.getElementById(sensorLoc[i]).src = "images\bat_green.png";
 						}
