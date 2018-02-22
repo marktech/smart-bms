@@ -65,7 +65,7 @@
 		function gotoURL(x) {
 			localStorage.removeItem("channel");
 			localStorage.removeItem("apikey");
-			localStorage.setItem("channel", sensorAdd[x]);
+			localStorage.setItem("channel", sensorCh[x]);
 			localStorage.setItem("apikey", sensorKey[x]);
 		    	location.href = 'dashboard-graph.html';
 		}
@@ -283,10 +283,10 @@
 						<a onclick="gotoURL(0)">
 						<img id="B1PH2-B3D3-C01" src="images\bat_gray.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
-						<a href="dashboard-graph.html">
+						<a onclick="gotoURL(1)">
 						<img id="B1PH2-B3D3-C02" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
-						<a href="dashboard-graph.html">
+						<a onclick="gotoURL(2)">
 						<img id="B1PH2-B3D3-C03" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a href="dashboard-graph.html">
