@@ -40,15 +40,14 @@
 		var IsIRNormal = 0;
 		var IsSOHNormal = 0;
 		
-			var oPopup = window.createPopup();
-			oPopup.document.body.innerHTML = "<table border='1'><tr><td>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</td></tr></table>";
 		
 		$(document).ready(function() {
 			setInterval(function() { 
 				get_data();
 			},15000);
 		});
-		// converts date format from JSON  
+		
+// converts date format from JSON  
 		function getDate(d) {  
 		    // get the data using javascript's date object (year, month, day, hour, minute, second)  
 		    // months in javascript start at 0, so remember to subtract 1 when specifying the month  
@@ -58,12 +57,12 @@
 		
 		function ShowDef()
 		{
-			oPopup.show(50, 40, 300, 270, document.body);
+			alert("Hello! I am an alert box!!");
 		}
 		
 		function HideDef()
 		{
-			oPopup.hide();
+			alert("Hello! I am an alert box!!");
 		}
 		
 		function gotoURL(x) {
