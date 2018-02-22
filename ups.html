@@ -72,8 +72,12 @@
 		    return Date.UTC(d.substring(0,4), d.substring(5,7)-1, d.substring(8,10), d.substring(11,13), d.substring(14,16), d.substring(17,19));// - (myOffset * 60000);  
 		}  
 		
-		function ShowDef()
+		function ShowDef(x)
 		{
+			document.getElementById("overlay").innerHTML = "Temperature:"+sensorDatT[x]+ 
+				"<br>Voltage:" +sensorDatV[x]+
+				"<br>Internal Resistance:"+sensorDatIR[x]+
+				"<br>State of Health:"+sensorDatSOH[x];
 			document.getElementById("overlay").style.display = "block";
 		}
 		
@@ -302,7 +306,7 @@
 	
 					<tr>
 						<td>
-						<a onclick="gotoURL(0)" onmouseout="HideDef();" onmouseover="ShowDef();">
+						<a onclick="gotoURL(0)" onmouseout="HideDef();" onmouseover="ShowDef(0);">
 						<img id="B1PH2-B3D3-C01" src="images\bat_gray.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a onclick="gotoURL(1)">
@@ -407,13 +411,6 @@
                         </div>
 			    
 			<div id="overlay">
-				Temperature: 
-				<br>
-				Voltage:
-				<br>
-				Internal Resistance:
-				<br>
-				State of Health:
 			</div>
 			    
                         <!-- /.panel-body -->
