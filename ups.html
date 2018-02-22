@@ -63,7 +63,10 @@
 			    popup.classList.toggle("show");
 		}
 		function URL(x) {
-			
+			localStorage.removeItem("channel");
+			localStorage.removeItem("apikey");
+			localStorage.setItem("channel", sensorAdd[x]);
+			localStorage.setItem("apikey", sensorKey[x]);
 		    	location.href = 'dashboard-graph.html';
 		}
 		
@@ -277,7 +280,7 @@
 	
 					<tr>
 						<td>
-						<a onclick="URL(0)" href="">
+						<a onclick="URL(0)">
 						<img id="B1PH2-B3D3-C01" src="images\bat_gray.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a href="dashboard-graph.html">
