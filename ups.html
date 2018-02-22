@@ -63,8 +63,10 @@
 			    popup.classList.toggle("show");
 		}
 		function gotoURL(x) {
+			localStorage.removeItem("sIndex");
 			localStorage.removeItem("channel");
 			localStorage.removeItem("apikey");
+			localStorage.setItem("sIndex", x);
 			localStorage.setItem("channel", sensorCh[x]);
 			localStorage.setItem("apikey", sensorKey[x]);
 		    	location.href = 'dashboard-graph.html';
