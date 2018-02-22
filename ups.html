@@ -25,7 +25,7 @@
 		    display: none; /* Hidden by default */
 		    width: 20%; /* Full width (cover the whole page) */
 		    height: 18%; /* Full height (cover the whole page) */
-		    top: 30%; 
+		    top: 20%; 
 		    left: 40%;
 		    right: 40%;
 		    bottom: 0%;
@@ -74,11 +74,11 @@
 		
 		function ShowDef(x)
 		{
-			document.getElementById("overlay").innerHTML = "Battery ID:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorLoc[x]+
-				"<br>Temperature:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatT[x]+ 
-				"&nbsp;&#8451;<br>Voltage:&nbsp;&nbsp;&nbsp;&nbsp;" +sensorDatV[x]+
-				"&nbsp;V<br>Internal Resistance:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatIR[x]+
-				"&nbsp;&#8486<br>State of Health:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatSOH[x]+
+			document.getElementById("overlay").innerHTML = "&nbsp;&nbsp;Battery ID:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorLoc[x]+
+				"<br>&nbsp;&nbsp;Temperature:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatT[x]+ 
+				"&nbsp;&#8451;<br>&nbsp;&nbsp;Voltage:&nbsp;&nbsp;&nbsp;&nbsp;" +sensorDatV[x]+
+				"&nbsp;V<br>&nbsp;&nbsp;Internal Resistance:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatIR[x]+
+				"&nbsp;&#8486<br>&nbsp;&nbsp;State of Health:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatSOH[x]+
 				"&nbsp;&#37;";
 			document.getElementById("overlay").style.display = "block";
 		}
