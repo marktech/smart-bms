@@ -141,12 +141,16 @@
 		
 		function ShowDef()
 		{
-			location.href = '#popup1';
+		    var x = document.getElementById("popup1");
+			x.style.display = "block";
+
 		}
 		
 		function HideDef()
 		{
-			location.href = '#';
+		    var x = document.getElementById("popup1");
+			x.style.display = "none";
+
 		}
 		
 		function gotoURL(x) {
