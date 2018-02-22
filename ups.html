@@ -62,6 +62,10 @@
 			    var popup = document.getElementById("myPopup");
 			    popup.classList.toggle("show");
 		}
+		function URL(x) {
+			
+		    	location.href = 'dashboard-graph.html';
+		}
 		
 		function get_device(){
 			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=5000',function(data){
@@ -273,7 +277,7 @@
 	
 					<tr>
 						<td>
-						<a href="dashboard-graph.html">
+						<a onclick="URL(0)" href="">
 						<img id="B1PH2-B3D3-C01" src="images\bat_gray.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a href="dashboard-graph.html">
