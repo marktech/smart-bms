@@ -74,10 +74,12 @@
 		
 		function ShowDef(x)
 		{
-			document.getElementById("overlay").innerHTML = "Temperature:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatT[x]+ 
-				"<br>Voltage:" +sensorDatV[x]+
-				"<br>Internal Resistance:"+sensorDatIR[x]+
-				"<br>State of Health:"+sensorDatSOH[x];
+			document.getElementById("overlay").innerHTML = "Battery ID:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorLoc[x]+
+				"<br>Temperature:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatT[x]+ 
+				"&nbsp;&#8451;<br>Voltage:&nbsp;&nbsp;&nbsp;&nbsp;" +sensorDatV[x]+
+				"&nbsp;V<br>Internal Resistance:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatIR[x]+
+				"&nbsp;&#8486<br>State of Health:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatSOH[x]+
+				"&nbsp;&#37;";
 			document.getElementById("overlay").style.display = "block";
 		}
 		
@@ -315,22 +317,22 @@
 						<a onclick="gotoURL(2)" onmouseout="HideDef()" onmouseover="ShowDef(2)">
 						<img id="B1PH2-B3D3-C03" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
-						<a onclick="gotoURL(3)">
+						<a onclick="gotoURL(3)" onmouseout="HideDef()" onmouseover="ShowDef(3)">
 						<img id="B1PH2-B3D3-C04" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
-						<a onclick="gotoURL(4)">
+						<a onclick="gotoURL(4)" onmouseout="HideDef()" onmouseover="ShowDef(4)">
 						<img id="B1PH2-B3D3-C05" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
-						<a onclick="gotoURL(5)">
+						<a onclick="gotoURL(5)" onmouseout="HideDef()" onmouseover="ShowDef(5)">
 						<img id="B1PH2-B3D3-C06" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
-						<a onclick="gotoURL(6)">
+						<a onclick="gotoURL(6)" onmouseout="HideDef()" onmouseover="ShowDef(6)">
 						<img id="B1PH2-B3D3-C07" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
-						<a onclick="gotoURL(7)">
+						<a onclick="gotoURL(7)" onmouseout="HideDef()" onmouseover="ShowDef(7)">
 						<img id="B1PH2-B3D3-C08" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
-						<a onclick="gotoURL(8)">
+						<a onclick="gotoURL(8)" onmouseout="HideDef()" onmouseover="ShowDef(8)">
 						<img id="B1PH2-B3D3-C09" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
 						<a onclick="gotoURL(9)">
