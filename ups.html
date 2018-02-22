@@ -11,58 +11,45 @@
 
 	<script type="text/javascript" src="js\jquery.min.js"></script> 
 	<style>
-		/* Popup container */
-		.popup {
-		    position: relative;
-		    display: inline-block;
-		    cursor: pointer;
-		}
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+}
 
-		/* The actual popup (appears on top) */
-		.popup .popuptext {
-		    visibility: hidden;
-		    width: 160px;
-		    background-color: #555;
-		    color: #fff;
-		    text-align: center;
-		    border-radius: 6px;
-		    padding: 8px 0;
-		    position: absolute;
-		    z-index: 1;
-		    bottom: 125%;
-		    left: 50%;
-		    margin-left: -80px;
-		}
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
 
-		/* Popup arrow */
-		.popup .popuptext::after {
-		    content: "";
-		    position: absolute;
-		    top: 100%;
-		    left: 50%;
-		    margin-left: -5px;
-		    border-width: 5px;
-		    border-style: solid;
-		    border-color: #555 transparent transparent transparent;
-		}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
 
-		/* Toggle this class when clicking on the popup container (hide and show the popup) */
-		.popup .show {
-		    visibility: visible;
-		    -webkit-animation: fadeIn 1s;
-		    animation: fadeIn 1s
-		}
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
 
-		/* Add animation (fade in the popup) */
-		@-webkit-keyframes fadeIn {
-		    from {opacity: 0;} 
-		    to {opacity: 1;}
-		}
+.dropdown-content a:hover {background-color: #ddd}
 
-		@keyframes fadeIn {
-		    from {opacity: 0;}
-		    to {opacity:1 ;}
-		}		
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
 		table, th, td {
 			border: 1px solid black;
 			border-collapse: collapse;
@@ -325,10 +312,16 @@
 	
 					<tr>
 						<td>
-						<a href="dashboard-graph.html">
-						<img onmouseover="showForm();" onmouseout="hideForm();" id="B1PH2-B3D3-C01" src="images\bat_gray.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
-						<span class="popuptext" id="myPopup">Popup text...</span>
+						<div class="dropdown"><a href="dashboard-graph.html">
+						<img id="B1PH2-B3D3-C01" src="images\bat_gray.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
+						<div class="dropdown-content">
+						    <a href="#">Link 1</a>
+						    <a href="#">Link 2</a>
+						    <a href="#">Link 3</a>
+						  </div>
+						</div>
+
 						<a href="dashboard-graph.html">
 						<img id="B1PH2-B3D3-C02" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
 						</a>
