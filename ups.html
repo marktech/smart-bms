@@ -107,10 +107,10 @@
 								sensorDatIR [x] = parseFloat(data.feeds[0].field3).toFixed(2);			
 								sensorDatSOH [x] = parseFloat(data.feeds[0].field4).toFixed(2);			
 								
-								if((sensorDatT [x]<35.0)&&(sensorDatT [x]>24.99)){
+								if((sensorDatT [x]<35.0)&&(sensorDatT [x]>29.99)){
 								   	IsTempNormal = 1;
 								}
-								else if((sensorDatT [x]<25.0)&&(sensorDatT [x]>18.0)){
+								else if((sensorDatT [x]<30.0)&&(sensorDatT [x]>18.0)){
 								   	IsTempNormal = 0;
 								}
 								else {
