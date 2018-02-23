@@ -64,6 +64,11 @@
 			},15000);
 		});
 		
+		function SysAlert(x){
+			Alert("Warning! Battery Anomaly Detected! Check Battery with ID Number&nbsp;"+sensorLoc[x]);
+		}
+		
+		
 // converts date format from JSON  
 		function getDate(d) {  
 		    // get the data using javascript's date object (year, month, day, hour, minute, second)  
@@ -236,10 +241,12 @@
 									}
 									else{
 										document.getElementById(sensorLoc[x]).src = "images/bat_red.png";
+										SysAlert(x);
 									}
 								}
 								else{
 									document.getElementById(sensorLoc[x]).src = "images/bat_red.png";
+									SysAlert(x);
 								}
 								
 								break;
