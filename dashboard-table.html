@@ -144,11 +144,11 @@
 								//	document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
 								//}
 								//else 
-								if((parseFloat(data.feeds[0].field1).toFixed(2) < 35.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>24.99))
+								if((parseFloat(data.feeds[0].field1).toFixed(2) < 35.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>29.99))
 								{
 									document.getElementById("ups_temperature"+x).style.backgroundColor = "Yellow"
 								}
-								else if((parseFloat(data.feeds[0].field1).toFixed(2) < 25)&& (parseFloat(data.feeds[0].field1).toFixed(2)>18))
+								else if((parseFloat(data.feeds[0].field1).toFixed(2) < 30)&& (parseFloat(data.feeds[0].field1).toFixed(2)>18))
 								{
 									document.getElementById("ups_temperature"+x).style.backgroundColor = "Green"
 								}
