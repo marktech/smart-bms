@@ -35,6 +35,22 @@
 		    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
 		    cursor: pointer; /* Add a pointer on hover */
 		}
+		
+		#overlay1 {
+		    position: fixed; /* Sit on top of the page content */
+		    display: none; /* Hidden by default */
+		    width: 40%; /* Full width (cover the whole page) */
+		    height: 18%; /* Full height (cover the whole page) */
+		    top: 20%; 
+		    left: 30%;
+		    right: 30%;
+		    bottom: 0%;
+		    background-color: Red; /* Black background with opacity */
+		    border-style: solid;
+		    border-width: 1px;
+		    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+		    cursor: pointer; /* Add a pointer on hover */
+		}
 	</style>
 	
 	<script>
@@ -65,7 +81,8 @@
 		});
 		
 		function SysAlert(x){
-			alert("Warning! Battery Anomaly Detected! Check Battery with ID Number&nbsp;"+sensorLoc[x]);
+			document.getElementById("overlay2").innerHTML = "&nbsp;&nbsp;Warning!<br>&nbsp;Battery anomaly detected, check battery with ID number&nbsp;"+sensorLoc[x];
+			document.getElementById("overlay2").style.display = "block";
 		}
 		
 		
@@ -421,7 +438,9 @@
 			    
 			<div id="overlay">
 			</div>
-			<div id="">
+			    
+			<div id="overlay2">
+				<a class="close" href="">&times;</a>
 			</div>
 			    
                         <!-- /.panel-body -->
