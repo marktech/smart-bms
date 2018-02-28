@@ -130,97 +130,102 @@
 								if((getDate(current_date.toISOString())-(getDate(data.feeds[0].created_at))) > 86400000)
 								{
 									document.getElementById("ups_status"+x).innerHTML = "Offline"
-									document.getElementById("ups_status"+x).style.backgroundColor = "Red"
+									document.getElementById("ups_status"+x).style.backgroundColor = "Gray"
+									document.getElementById("ups_temperature"+x).style.backgroundColor = "Gray"
+									document.getElementById("ups_voltage"+x).style.backgroundColor = "Gray"
+									document.getElementById("ups_iresistance"+x).style.backgroundColor = "Gray"
+									document.getElementById("ups_soh"+x).style.backgroundColor = "Gray"
 								}
 								else
 								{
 									document.getElementById("ups_status"+x).innerHTML = "Online"
 									document.getElementById("ups_status"+x).style.backgroundColor = "Green"
-								}
-								
-								document.getElementById("ups_temperature"+x).innerHTML = parseFloat(data.feeds[0].field1).toFixed(2);	
-								//if((parseFloat(data.feeds[0].field1).toFixed(2) > 40.0)||(parseFloat(data.feeds[0].field1).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field1).toFixed(2) == 0))
-								//{
-								//	document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
-								//}
-								//else 
-								if((parseFloat(data.feeds[0].field1).toFixed(2) < 35.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>29.99))
-								{
-									document.getElementById("ups_temperature"+x).style.backgroundColor = "Yellow"
-								}
-								else if((parseFloat(data.feeds[0].field1).toFixed(2) < 30)&& (parseFloat(data.feeds[0].field1).toFixed(2)>18))
-								{
-									document.getElementById("ups_temperature"+x).style.backgroundColor = "Green"
-								}
-								else
-								{
-									document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
-								}
-								
-								document.getElementById("ups_voltage"+x).innerHTML = parseFloat(data.feeds[0].field2).toFixed(2);			
-								//if((parseFloat(data.feeds[0].field2).toFixed(2) > 16.0)||(parseFloat(data.feeds[0].field2).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field2).toFixed(2) == 0))
-								//{
-								//	document.getElementById("ups_voltage"+x).style.backgroundColor = "Red"
-								//}
-								//else 
-								if((parseFloat(data.feeds[0].field2).toFixed(2) <16.0)&& (parseFloat(data.feeds[0].field2).toFixed(2)>13.5))
-								{
-									document.getElementById("ups_voltage"+x).style.backgroundColor = "Green"
-								}
-								else if((parseFloat(data.feeds[0].field2).toFixed(2) < 13.51)&& (parseFloat(data.feeds[0].field2).toFixed(2)>13.0))
-								{
-									document.getElementById("ups_voltage"+x).style.backgroundColor = "Yellow"
-								}
-								else
-								{
-									document.getElementById("ups_voltage"+x).style.backgroundColor = "Red"
-								}
-								
-		/*Internal resistance - Linear Log Regression Modelling implemented here*/
-								temporaryDat = eval(data.feeds[0].field3);
-								temporaryDat = parseFloat(temporaryDat);
-								temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
-								if(temporaryDat < 2.5)
-									temporaryDat = 2.85;
-								if((temporaryDat.toFixed(2) == "NaN"))
-								{
-									temporaryDat = 2.85;
+
+									
+									document.getElementById("ups_temperature"+x).innerHTML = parseFloat(data.feeds[0].field1).toFixed(2);	
+									//if((parseFloat(data.feeds[0].field1).toFixed(2) > 40.0)||(parseFloat(data.feeds[0].field1).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field1).toFixed(2) == 0))
+									//{
+									//	document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
+									//}
+									//else 
+									if((parseFloat(data.feeds[0].field1).toFixed(2) < 35.0)&& (parseFloat(data.feeds[0].field1).toFixed(2)>29.99))
+									{
+										document.getElementById("ups_temperature"+x).style.backgroundColor = "Yellow"
+									}
+									else if((parseFloat(data.feeds[0].field1).toFixed(2) < 30)&& (parseFloat(data.feeds[0].field1).toFixed(2)>18))
+									{
+										document.getElementById("ups_temperature"+x).style.backgroundColor = "Green"
+									}
+									else
+									{
+										document.getElementById("ups_temperature"+x).style.backgroundColor = "Red"
+									}
+									
+									document.getElementById("ups_voltage"+x).innerHTML = parseFloat(data.feeds[0].field2).toFixed(2);			
+									//if((parseFloat(data.feeds[0].field2).toFixed(2) > 16.0)||(parseFloat(data.feeds[0].field2).toFixed(2) == "NaN")||(parseFloat(data.feeds[0].field2).toFixed(2) == 0))
+									//{
+									//	document.getElementById("ups_voltage"+x).style.backgroundColor = "Red"
+									//}
+									//else 
+									if((parseFloat(data.feeds[0].field2).toFixed(2) <16.0)&& (parseFloat(data.feeds[0].field2).toFixed(2)>13.5))
+									{
+										document.getElementById("ups_voltage"+x).style.backgroundColor = "Green"
+									}
+									else if((parseFloat(data.feeds[0].field2).toFixed(2) < 13.51)&& (parseFloat(data.feeds[0].field2).toFixed(2)>13.0))
+									{
+										document.getElementById("ups_voltage"+x).style.backgroundColor = "Yellow"
+									}
+									else
+									{
+										document.getElementById("ups_voltage"+x).style.backgroundColor = "Red"
+									}
+									
+			/*Internal resistance - Linear Log Regression Modelling implemented here*/
+									temporaryDat = eval(data.feeds[0].field3);
+									temporaryDat = parseFloat(temporaryDat);
 									temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
-								}
-								document.getElementById("ups_iresistance"+x).innerHTML = temporaryDat.toFixed(2);			
-								if((temporaryDat.toFixed(2) > 6.0)||(temporaryDat.toFixed(2) == "NaN")||(temporaryDat.toFixed(2) == 0))
-								{
-									document.getElementById("ups_iresistance"+x).style.backgroundColor = "Red"
-								}
-								else if((temporaryDat.toFixed(2) <6.1)&& (temporaryDat.toFixed(2) >4.0))
-								{
-									document.getElementById("ups_iresistance"+x).style.backgroundColor = "Yellow"
-								}
-								else
-								{
-									document.getElementById("ups_iresistance"+x).style.backgroundColor = "Green"
-								}
-		/*Internal resistance - ------------------------------------*/
-								
-		/*state of Health - moving average implemented here*/
-								temporaryDat = eval(data.feeds[0].field4);
-								temporaryDat = parseFloat(temporaryDat);
-								for(filNo=0;filNo<3;filNo++){
-									temporaryDat +=100.0;
-									temporaryDat /=2.0;
-								}
-								document.getElementById("ups_soh"+x).innerHTML = temporaryDat.toFixed(2);	
-								if((temporaryDat.toFixed(2) < 50.0)||(temporaryDat.toFixed(2) == "NaN")||(temporaryDat.toFixed(2) == 0))
-								{
-									document.getElementById("ups_soh"+x).style.backgroundColor = "Red"
-								}
-								else if((temporaryDat.toFixed(2) >50.1)&& temporaryDat.toFixed(2) < 80)
-								{
-									document.getElementById("ups_soh"+x).style.backgroundColor = "Yellow"
-								}
-								else
-								{
-									document.getElementById("ups_soh"+x).style.backgroundColor = "Green"
+									if(temporaryDat < 2.5)
+										temporaryDat = 2.85;
+									if((temporaryDat.toFixed(2) == "NaN"))
+									{
+										temporaryDat = 2.85;
+										temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
+									}
+									document.getElementById("ups_iresistance"+x).innerHTML = temporaryDat.toFixed(2);			
+									if((temporaryDat.toFixed(2) > 6.0)||(temporaryDat.toFixed(2) == "NaN")||(temporaryDat.toFixed(2) == 0))
+									{
+										document.getElementById("ups_iresistance"+x).style.backgroundColor = "Red"
+									}
+									else if((temporaryDat.toFixed(2) <6.1)&& (temporaryDat.toFixed(2) >4.0))
+									{
+										document.getElementById("ups_iresistance"+x).style.backgroundColor = "Yellow"
+									}
+									else
+									{
+										document.getElementById("ups_iresistance"+x).style.backgroundColor = "Green"
+									}
+			/*Internal resistance - ------------------------------------*/
+									
+			/*state of Health - moving average implemented here*/
+									temporaryDat = eval(data.feeds[0].field4);
+									temporaryDat = parseFloat(temporaryDat);
+									for(filNo=0;filNo<3;filNo++){
+										temporaryDat +=100.0;
+										temporaryDat /=2.0;
+									}
+									document.getElementById("ups_soh"+x).innerHTML = temporaryDat.toFixed(2);	
+									if((temporaryDat.toFixed(2) < 50.0)||(temporaryDat.toFixed(2) == "NaN")||(temporaryDat.toFixed(2) == 0))
+									{
+										document.getElementById("ups_soh"+x).style.backgroundColor = "Red"
+									}
+									else if((temporaryDat.toFixed(2) >50.1)&& temporaryDat.toFixed(2) < 80)
+									{
+										document.getElementById("ups_soh"+x).style.backgroundColor = "Yellow"
+									}
+									else
+									{
+										document.getElementById("ups_soh"+x).style.backgroundColor = "Green"
+									}
 								}
 								break;
 							}
