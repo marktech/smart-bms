@@ -127,10 +127,11 @@
 								console.log(getDate(current_date.toISOString()));
 								console.log(getDate(data.feeds[0].created_at));
 									
-								if((getDate(current_date.toISOString())-(getDate(data.feeds[0].created_at))) > 172800000)
+								if((getDate(current_date.toISOString())-(getDate(data.feeds[0].created_at))) > 345600000)
 								{
 									document.getElementById("ups_status"+x).innerHTML = "Offline"
 									document.getElementById("ups_status"+x).style.backgroundColor = "Gray"
+									document.getElementById("ups_updated"+x).style.backgroundColor = "Gray"
 									document.getElementById("ups_temperature"+x).style.backgroundColor = "Gray"
 									document.getElementById("ups_voltage"+x).style.backgroundColor = "Gray"
 									document.getElementById("ups_iresistance"+x).style.backgroundColor = "Gray"
