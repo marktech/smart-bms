@@ -72,6 +72,7 @@
 		var IsVoltNormal = 0;
 		var IsIRNormal = 0;
 		var IsSOHNormal = 0;
+		var IsUndefined = 0;
 		
 		
 		$(document).ready(function() {
@@ -172,7 +173,14 @@
 								sensorDatT [x] = parseFloat(data.feeds[0].field1).toFixed(2);	
 								sensorDatV [x] = parseFloat(data.feeds[0].field2).toFixed(2);			
 								sensorDatIR [x] = parseFloat(data.feeds[0].field3).toFixed(2);			
-								sensorDatSOH [x] = parseFloat(data.feeds[0].field4).toFixed(2);			
+								sensorDatSOH [x] = parseFloat(data.feeds[0].field4).toFixed(2);		
+								
+								if((sensorDatT [x]=="undefined")||(sensorDatV [x]=="undefined")||(sensorDatIR [x]=="undefined")||(sensorDatSOH [x]=="undefined")){
+								   	IsUndefined = 1;
+								}
+								else{
+								   	IsUndefined = 0;
+								}
 								
 								if((sensorDatT [x]<35.0)&&(sensorDatT [x]>29.99)){
 								   	IsTempNormal = 1;
@@ -207,63 +215,74 @@
 								if((sensorDatSOH [x] < 50.0)||(sensorDatSOH [x] == "Nan")||(sensorDatSOH [x] == 0.0)){
 								   	IsSOHNormal = 2;
 								}
-								else if((sensorDatIR [x] < 80.0)&&(sensorDatIR [x] > 50.1)){
+								else if((sensorDatSOH [x] < 80.0)&&(sensorDatSOH [x] > 50.1)){
 								   	IsSOHNormal = 1;
 								}
 								else {
 									IsSOHNormal =0;
 								}
+								
 								if (IsOffline==0){
-									if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_green.png";
-									}
-									else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
-									}
-									else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
-										document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+									if(IsUndefined==0){
+										if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_green.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else{
+											document.getElementById(sensorLoc[x]).src = "images/bat_red.png";
+											SysAlert(x);
+										}
 									}
 									else{
-										document.getElementById(sensorLoc[x]).src = "images/bat_red.png";
-										SysAlert(x);
+										document.getElementById(sensorLoc[x]).src = "images/bat_undefined.png";
 									}
 								}
 								else{
-									document.getElementById(sensorLoc[x]).src = "images/bat_gray.png";
-									SysAlert(x);
+									if(IsUndefined==0){
+										document.getElementById(sensorLoc[x]).src = "images/bat_gray.png";
+										SysAlert(x);
+									}
+									else{
+										document.getElementById(sensorLoc[x]).src = "images/bat_undefined.png";
+									}
 								}
 								
 								break;
