@@ -127,7 +127,7 @@
 								console.log(getDate(current_date.toISOString()));
 								console.log(getDate(data.feeds[0].created_at));
 									
-								if((getDate(current_date.toISOString())-(getDate(data.feeds[0].created_at))) > 259200000)
+								if((getDate(current_date.toISOString())-(getDate(data.feeds[0].created_at))) > 604800000)
 								{
 									document.getElementById("ups_status"+x).innerHTML = "Offline"
 									document.getElementById("ups_status"+x).style.backgroundColor = "Gray"
