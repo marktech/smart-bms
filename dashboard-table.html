@@ -49,7 +49,7 @@
 			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=33',function(data){
 				//console.log(data);
 				var x=0;
-				for (var i = 0; i<=data.feeds.length-1; i++){
+				for (var i = 0; i<=data.feeds.length-0; i++){
 					if(data.feeds[i].field3 =="UPS") {
 						sensorKey[i] = (data.feeds[i].field2);
 						sensorLoc[i] = (data.feeds[i].field4);
@@ -108,11 +108,11 @@
 			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=33',function(moddata){
 				axn=moddata.feeds.length;
 			});
-			for(h=0; h<=(axn-1);h++){					
+			for(h=0; h<=(axn-0);h++){					
 				$.getJSON('https://api.thingspeak.com/channels/'+sensorCh[h]+'/feeds.json?api_key='+sensorKey[h]+'&results=1',function(data){
 					if(data.feeds.length!=0)
 					{
-						for(x=0;x<(axn-1);x++){
+						for(x=0;x<(axn-0);x++){
 							if(data.channel.name == sensorAdd[x])
 							{
 								console.log('https://api.thingspeak.com/channels/'+sensorCh[x]+'/feeds.json?api_key='+sensorKey[x]+'&results=1');
