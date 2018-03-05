@@ -46,7 +46,7 @@
 					localStorage.setItem("apikey", sensorKey[x.rowIndex-1]);
 		}
 		function get_device(){
-			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=32',function(data){
+			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=33',function(data){
 				//console.log(data);
 				var x=0;
 				for (var i = 0; i<=data.feeds.length-1; i++){
@@ -105,7 +105,7 @@
 		
 		function get_data(){
 			var x = 0; 
-			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=32',function(moddata){
+			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=33',function(moddata){
 				axn=moddata.feeds.length;
 			});
 			for(h=0; h<=(axn-1);h++){					
