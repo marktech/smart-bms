@@ -49,7 +49,7 @@
 			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=34',function(data){
 				//console.log(data);
 				var x=0;
-				for (var i = 0; i<=data.feeds.length+2; i++){
+				for (var i = 0; i<=data.feeds.length; i++){
 					if(data.feeds[i].field3 =="UPS") {
 						sensorKey[i] = (data.feeds[i].field2);
 						sensorLoc[i] = (data.feeds[i].field4);
