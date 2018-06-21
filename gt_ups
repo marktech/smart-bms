@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Smart UPS Battery Monitoring System </title>
+
+	<script type="text/javascript" src="js\jquery.min.js"></script> 
+	<style>
+		table, th, td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+		th, td {
+			padding: 5px;
+			text-align: left;    
+		}
+		
+		#overlay {
+		    position: fixed; /* Sit on top of the page content */
+		    display: none; /* Hidden by default */
+		    width: 20%; /* Full width (cover the whole page) */
+		    height: 18%; /* Full height (cover the whole page) */
+		    top: 20%; 
+		    left: 40%;
+		    right: 40%;
+		    bottom: 0%;
+		    background-color: white; /* Black background with opacity */
+		    border-style: solid;
+		    border-width: 1px;
+		    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+		    cursor: pointer; /* Add a pointer on hover */
+		}
+		
+		#overlay1 {
+		    position: fixed; /* Sit on top of the page content */
+		    display: none; /* Hidden by default */
+		    width: 40%; /* Full width (cover the whole page) */
+		    height: 18%; /* Full height (cover the whole page) */
+		    top: 20%; 
+		    left: 30%;
+		    right: 30%;
+		    bottom: 0%;
+		    background-color: Red; /* Black background with opacity */
+		    border-style: solid;
+		    border-width: 1px;
+		    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+		    cursor: pointer; /* Add a pointer on hover */
+		}
+	</style>
+	
+	<script>
+		var sensorKey=[];
+		var sensorCh=[];
+		var sensorAdd=[];
+		var sensorLoc=[];
+		var entryArray=[];
+		var axn = 0;
+		var filNo = 0;
+		var sensorDat = [];
+		var sensorDatT = [];
+		var sensorDatV = [];
+		var sensorDatIR = [];
+		var sensorDatSOH = [];
+		var temporaryDat = [];
+		var IsOffline = 0;
+		var IsTempNormal = 0;
+		var IsVoltNormal = 0;
+		var IsIRNormal = 0;
+		var IsSOHNormal = 0;
+		var IsUndefined = 0;
+		
+		
+		$(document).ready(function() {
+			setInterval(function() { 
+				get_data();
+			},15000);
+		});
+		
+		function SysAlert(x){
+			//document.getElementById("overlay2").innerHTML = "&nbsp;&nbsp;Warning!<br>&nbsp;&nbsp;Battery anomaly detected, check battery with ID number&nbsp;"+sensorLoc[x];
+			//document.getElementById("overlay2").style.display = "block";
+		}
+		
+		
+// converts date format from JSON  
+		function getDate(d) {  
+		    // get the data using javascript's date object (year, month, day, hour, minute, second)  
+		    // months in javascript start at 0, so remember to subtract 1 when specifying the month  
+		    // offset in minutes is converted to milliseconds and subtracted so that chart's x-axis is correct  
+		    return Date.UTC(d.substring(0,4), d.substring(5,7)-1, d.substring(8,10), d.substring(11,13), d.substring(14,16), d.substring(17,19));// - (myOffset * 60000);  
+		}  
+		
+		function ShowDef(x)
+		{
+			document.getElementById("overlay").innerHTML = "&nbsp;&nbsp;Battery ID:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorLoc[x]+
+				"<br>&nbsp;&nbsp;Temperature:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatT[x]+ 
+				"&nbsp;&#8451;<br>&nbsp;&nbsp;Voltage:&nbsp;&nbsp;&nbsp;&nbsp;" +sensorDatV[x]+
+				"&nbsp;V<br>&nbsp;&nbsp;Internal Resistance:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatIR[x]+
+				"&nbsp;m&#8486<br>&nbsp;&nbsp;State of Health:&nbsp;&nbsp;&nbsp;&nbsp;"+sensorDatSOH[x]+
+				"&nbsp;&#37;";
+			document.getElementById("overlay").style.display = "block";
+		}
+		
+		function HideDef()
+		{
+			document.getElementById("overlay").style.display = "none";
+		}
+		
+		function gotoURL(x) {
+			localStorage.removeItem("sIndex");
+			localStorage.removeItem("channel");
+			localStorage.removeItem("apikey");
+			localStorage.setItem("sIndex", x);
+			localStorage.setItem("channel", sensorCh[x]);
+			localStorage.setItem("apikey", sensorKey[x]);
+		    	location.href = 'dashboard-graph.html';
+		}
+		
+		function get_device(){
+			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=34',function(data){
+				//console.log(data);
+				var x=0;
+				for (var i = 0; i<=data.feeds.length-1; i++){
+					if(data.feeds[i].field3 =="UPS") {
+						sensorKey[i] = (data.feeds[i].field2);
+						sensorLoc[i] = (data.feeds[i].field4);
+						sensorAdd[i] = (data.feeds[i].field1);
+						sensorCh[i] = (data.feeds[i].field5);
+						entryArray[i] = (data.feeds[i].created_at);
+					}
+					
+				}
+			});
+			get_data();
+		}
+		
+		function get_data(){
+			var x = 0; 
+			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=34',function(moddata){
+				axn=moddata.feeds.length;
+			});
+			for(h=0; h<=(axn-1);h++){					
+				$.getJSON('https://api.thingspeak.com/channels/'+sensorCh[h]+'/feeds.json?api_key='+sensorKey[h]+'&results=1',function(data){
+					if(data.feeds.length!=0)
+					{
+						for(x=0;x<(axn-1);x++){
+							if(data.channel.name == sensorAdd[x])
+							{
+								console.log('https://api.thingspeak.com/channels/'+sensorCh[x]+'/feeds.json?api_key='+sensorKey[x]+'&results=1');
+						
+								console.log(data);
+							
+								var current_date = new Date();
+								var rhrs = current_date.getHours();
+								current_date.setHours(rhrs+8);
+								console.log(getDate(current_date.toISOString()));
+								console.log(getDate(data.feeds[0].created_at));
+									
+								if((getDate(current_date.toISOString())-(getDate(data.feeds[0].created_at))) > 1468800000)
+								{
+									IsOffline = 0;
+								}
+								else
+								{
+									IsOffline = 0;
+								}
+								
+								sensorDatT [x] = parseFloat(data.feeds[0].field1).toFixed(2);	
+								sensorDatV [x] = parseFloat(data.feeds[0].field2).toFixed(2);			
+								sensorDatIR [x] = parseFloat(data.feeds[0].field3).toFixed(2);			
+								sensorDatSOH [x] = parseFloat(data.feeds[0].field4).toFixed(2);		
+								
+								if((sensorDatT [x]=="undefined")||(sensorDatV [x]=="undefined")||(sensorDatIR [x]=="undefined")||(sensorDatSOH [x]=="undefined")){
+								   	IsUndefined = 1;
+								}
+								else{
+								   	IsUndefined = 0;
+								}
+								
+								if((sensorDatT [x]<35.0)&&(sensorDatT [x]>29.99)){
+								   	IsTempNormal = 1;
+								}
+								else if((sensorDatT [x]<30.0)&&(sensorDatT [x]>18.0)){
+								   	IsTempNormal = 0;
+								}
+								else {
+									IsTempNormal = 2;
+								}
+								   
+								if((sensorDatV [x]<16.0)&&(sensorDatV [x]>13.0)){
+								   	IsVoltNormal = 0;
+								}
+								else if((sensorDatV [x]<13.01)&&(sensorDatV [x]>12.5)){
+								   	IsVoltNormal = 1;
+								}
+								else {
+									IsVoltNormal = 2;
+								}
+								
+								if((sensorDatIR [x] > 6.0)||(sensorDatIR [x] == "Nan")||(sensorDatIR [x] == 0.0)){
+								   	IsIRNormal = 2;
+								}
+								else if((sensorDatIR [x] < 6.1)&&(sensorDatIR [x] > 4.0)){
+								   	IsIRNormal = 1;
+								}
+								else {
+									IsIRNormal =0;
+								}
+								
+								if((sensorDatSOH [x] < 50.0)||(sensorDatSOH [x] == "Nan")||(sensorDatSOH [x] == 0.0)){
+								   	IsSOHNormal = 2;
+								}
+								else if((sensorDatSOH [x] < 80.0)&&(sensorDatSOH [x] > 50.1)){
+								   	IsSOHNormal = 1;
+								}
+								else {
+									IsSOHNormal =0;
+								}
+								
+								if (IsOffline==0){
+									if(IsUndefined==0){
+										if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_green.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 0)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 0)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 0)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 0)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else if((IsTempNormal== 1)&&(IsVoltNormal == 1)&&(IsIRNormal == 1)&&(IsSOHNormal == 1)){
+											document.getElementById(sensorLoc[x]).src = "images/bat_yellow.png";
+										}
+										else{
+											document.getElementById(sensorLoc[x]).src = "images/bat_red.png";
+											SysAlert(x);
+										}
+									}
+									else{
+										document.getElementById(sensorLoc[x]).src = "images/bat_undefined.png";
+									}
+								}
+								else{
+									if(IsUndefined==0){
+										document.getElementById(sensorLoc[x]).src = "images/bat_gray.png";
+										SysAlert(x);
+									}
+									else{
+										document.getElementById(sensorLoc[x]).src = "images/bat_undefined.png";
+									}
+								}
+								
+								break;
+							}
+						}
+						if (x>=(axn-1)){
+							console.log(data.channel.name)
+						}
+					}
+				});
+			}
+		}
+
+	</script>	
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/smartups/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/smartups/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="/smartups/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="/smartups/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/smartups/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/smartups/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body onload="get_device()">
+    <div id="wrapper">
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"> 
+			    <img src="images/logo.png" hspace="20" style="width:100px;"> 
+			    Smart UPS Battery Monitoring System (Beta)</h1>
+			<a class="btn" href="dashboard.html">Dashboard</a>
+			<a class="btn" href="dashboard-table.html">UPS System - Tabular</a>
+			<a class="btn" href="login.html">Configurations</a>
+			<a class="btn" href="login.html">Login</a>
+                 </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="data_for">
+				<br>
+				<br>
+				<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+	
+					<tr>
+						<td>
+						<a onclick="gotoURL(0)" onmouseout="HideDef()" onmouseover="ShowDef(0)">
+						<img id="B1PH2-B3D3-C01" src="images\bat_gray.png" style="float: left; width: 5%; margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(1)" onmouseout="HideDef()" onmouseover="ShowDef(1)">
+						<img id="B1PH2-B3D3-C02" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(2)" onmouseout="HideDef()" onmouseover="ShowDef(2)">
+						<img id="B1PH2-B3D3-C03" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(3)" onmouseout="HideDef()" onmouseover="ShowDef(3)">
+						<img id="B1PH2-B3D3-C04" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(4)" onmouseout="HideDef()" onmouseover="ShowDef(4)">
+						<img id="B1PH2-B3D3-C05" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(5)" onmouseout="HideDef()" onmouseover="ShowDef(5)">
+						<img id="B1PH2-B3D3-C06" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(6)" onmouseout="HideDef()" onmouseover="ShowDef(6)">
+						<img id="B1PH2-B3D3-C07" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(7)" onmouseout="HideDef()" onmouseover="ShowDef(7)">
+						<img id="B1PH2-B3D3-C08" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(8)" onmouseout="HideDef()" onmouseover="ShowDef(8)">
+						<img id="B1PH2-B3D3-C09" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(9)" onmouseout="HideDef()" onmouseover="ShowDef(9)">
+						<img id="B1PH2-B3D3-C10" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(10)" onmouseout="HideDef()" onmouseover="ShowDef(10)">
+						<img id="B1PH2-B3D3-C11" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(11)" onmouseout="HideDef()" onmouseover="ShowDef(11)">
+						<img id="B1PH2-B3D3-C12" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(12)" onmouseout="HideDef()" onmouseover="ShowDef(12)">
+						<img id="B1PH2-B3D3-C13" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(13)" onmouseout="HideDef()" onmouseover="ShowDef(13)">
+						<img id="B1PH2-B3D3-C14" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(14)" onmouseout="HideDef()" onmouseover="ShowDef(14)">
+						<img id="B1PH2-B3D3-C15" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(15)" onmouseout="HideDef()" onmouseover="ShowDef(15)">
+						<img id="B1PH2-B3D3-C16" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 2.5%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(31)" onmouseout="HideDef()" onmouseover="ShowDef(31)">
+						<img id="B1PH2-B3D3-C32" src="images\bat_gray.png" style="float: left; width: 5%;  margin-left: 2.5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(30)" onmouseout="HideDef()" onmouseover="ShowDef(30)">
+						<img id="B1PH2-B3D3-C31" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(29)" onmouseout="HideDef()" onmouseover="ShowDef(29)">
+						<img id="B1PH2-B3D3-C30" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(28)" onmouseout="HideDef()" onmouseover="ShowDef(28)">
+						<img id="B1PH2-B3D3-C29" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(27)" onmouseout="HideDef()" onmouseover="ShowDef(27)">
+						<img id="B1PH2-B3D3-C28" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(26)" onmouseout="HideDef()" onmouseover="ShowDef(26)">
+						<img id="B1PH2-B3D3-C27" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(25)" onmouseout="HideDef()" onmouseover="ShowDef(25)">
+						<img id="B1PH2-B3D3-C26" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(24)" onmouseout="HideDef()" onmouseover="ShowDef(24)">
+						<img id="B1PH2-B3D3-C25" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(23)" onmouseout="HideDef()" onmouseover="ShowDef(23)">
+						<img id="B1PH2-B3D3-C24" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(22)" onmouseout="HideDef()" onmouseover="ShowDef(22)">
+						<img id="B1PH2-B3D3-C23" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(21)" onmouseout="HideDef()" onmouseover="ShowDef(21)">
+						<img id="B1PH2-B3D3-C22" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(20)" onmouseout="HideDef()" onmouseover="ShowDef(20)">
+						<img id="B1PH2-B3D3-C21" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(19)" onmouseout="HideDef()" onmouseover="ShowDef(19)">
+						<img id="B1PH2-B3D3-C20" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(18)" onmouseout="HideDef()" onmouseover="ShowDef(18)">
+						<img id="B1PH2-B3D3-C19" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(17)" onmouseout="HideDef()" onmouseover="ShowDef(17)">
+						<img id="B1PH2-B3D3-C18" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 1%; margin-bottom: 0.5em;" >
+						</a>
+						<a onclick="gotoURL(16)" onmouseout="HideDef()" onmouseover="ShowDef(16)">
+						<img id="B1PH2-B3D3-C17" src="images\bat_gray.png" style="float: left; width: 5%; margin-right: 2.5%; margin-bottom: 0.5em;" >
+						</a>
+						</td>
+
+					</tr>
+				</table>
+	
+                            <!-- /.table-responsive -->
+                        </div>
+			    
+			<!--<div id="overlay"> -->
+			<!--</div> -->
+			    
+			<!--<div id="overlay2"> -->
+			<!--<a class="close" href="">&times;</a> -->
+			<!--</div> -->
+			    
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/smartups/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/smartups/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/smartups/vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="/smartups/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="/smartups/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="/smartups/vendor/datatables-responsive/dataTables.responsive.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/smartups/dist/js/sb-admin-2.js"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+
+</body>
+</html>
