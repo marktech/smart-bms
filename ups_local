@@ -122,16 +122,16 @@
 		}
 		
 		function get_device(){
-			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=34',function(data){
-				//console.log(data);
+			$.get('http://10.116.1.155/EISMobile/IOT/BMS/bms_iot_api/IoTData?iotType=UPS',function(data){
+				console.log(data);
 				var x=0;
-				for (var i = 0; i<=data.feeds.length-1; i++){
-					if(data.feeds[i].field3 =="UPS") {
-						sensorKey[i] = (data.feeds[i].field2);
-						sensorLoc[i] = (data.feeds[i].field4);
-						sensorAdd[i] = (data.feeds[i].field1);
-						sensorCh[i] = (data.feeds[i].field5);
-						entryArray[i] = (data.feeds[i].created_at);
+				for (var i = 0; i<=data.Data.length-1; i++){
+					if(data.Data[i].msg_type =="data") {
+						sensorKey[i] = (data.Data[i].br_id);
+						sensorLoc[i] = (data.Data[i].location;
+						sensorAdd[i] = (data.Data[i].node_id);
+						//sensorCh[i] = (data.Data[i].field5);
+						entryArray[i] = (data.Data[i].timestamp);
 					}
 					
 				}
@@ -141,12 +141,12 @@
 		
 		function get_data(){
 			var x = 0; 
-			$.get('https://api.thingspeak.com/channels/311561/feeds.json?api_key=BO36593Y0EK1YBNU&results=34',function(moddata){
-				axn=moddata.feeds.length;
+			$.get('http://10.116.1.155/EISMobile/IOT/BMS/bms_iot_api/IoTData?iotType=UPS',function(moddata){
+				axn=moddata.Data.length;
 			});
 			for(h=0; h<=(axn-1);h++){					
-				$.getJSON('https://api.thingspeak.com/channels/'+sensorCh[h]+'/feeds.json?api_key='+sensorKey[h]+'&results=1',function(data){
-					if(data.feeds.length!=0)
+				$.getJSON('http://10.116.1.155/EISMobile/IOT/BMS/bms_iot_api/IoTData?iotType=UPS',function(data){
+					if(data.Data.length!=0)
 					{
 						for(x=0;x<(axn-1);x++){
 							if(data.channel.name == sensorAdd[x])
