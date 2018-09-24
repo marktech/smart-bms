@@ -172,7 +172,7 @@
 								
 								sensorDatT [x] = parseFloat(data.feeds[0].field1).toFixed(2);	
 								sensorDatV [x] = parseFloat(data.feeds[0].field2).toFixed(2);			
-								sensorDatIR [x] = parseFloat(data.feeds[0].field3).toFixed(2);			
+								sensorDatIR [x] = 2.9 + (0.6*Math.log((parseFloat(data.feeds[0].field3)-1.3)));//parseFloat(data.feeds[0].field3).toFixed(2);			
 								sensorDatSOH [x] = parseFloat(data.feeds[0].field4).toFixed(2);		
 								
 								if((sensorDatT [x]=="undefined")||(sensorDatV [x]=="undefined")||(sensorDatIR [x]=="undefined")||(sensorDatSOH [x]=="undefined")){
