@@ -184,15 +184,15 @@
 			/*Internal resistance - Linear/Exponential Log Regression Modelling implemented here*/
 									temporaryDat = eval(data.feeds[0].field3);
 									temporaryDat = parseFloat(temporaryDat);
-									//temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
-									temporaryDat = 2.9*Math.exp(0.0245*(parseFloat(temporaryDat)));
+									temporaryDat =  2.9 + (0.6*Math.log((parseFloat(temporaryDat)-1.3)));
+									//temporaryDat = 2.9*Math.exp(0.0245*(parseFloat(temporaryDat)));
 									if(temporaryDat < 2.5)
 										temporaryDat = 2.85;
 									if((temporaryDat.toFixed(2) == "NaN"))
 									{
 										temporaryDat = 2.85;
-										//temporaryDat = (0.6*Math.log((parseFloat(temporaryDat)-1.3)) + 2.8);
-										temporaryDat = 2.9*Math.exp(0.0245*(parseFloat(temporaryDat)));
+										temporaryDat = 2.9 + (0.6*Math.log((parseFloat(temporaryDat)-1.3))));
+										//temporaryDat = 2.9*Math.exp(0.0245*(parseFloat(temporaryDat)));
 									}
 									document.getElementById("ups_iresistance"+x).innerHTML = temporaryDat.toFixed(2);			
 									if((temporaryDat.toFixed(2) > 6.0)||(temporaryDat.toFixed(2) == "NaN")||(temporaryDat.toFixed(2) == 0))
